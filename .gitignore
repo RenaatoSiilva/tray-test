@@ -1,0 +1,10 @@
+# Laravel
+backend-api/vendor/
+backend-api/storage/
+backend-api/node_modules/
+backend-api/.env
+
+# Vue
+frontend/node_modules/
+frontend/dist/
+frontend/.env
