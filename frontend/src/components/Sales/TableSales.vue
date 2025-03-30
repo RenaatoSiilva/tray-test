@@ -1,13 +1,7 @@
 <template>
 
-    <div v-if="isLoading" class="skeleton-container">
-        <div v-for="n in 5" :key="'skeleton-' + n" class="skeleton-row">
-            <div class="skeleton-cell"></div>
-            <div class="skeleton-cell"></div>
-            <div class="skeleton-cell"></div>
-            <div class="skeleton-cell"></div>
-        </div>
-    </div>
+    <div v-if="isLoading" class="skeleton h-10 w-full"></div>
+
 
     <div v-if="!isLoading">
 
@@ -58,11 +52,12 @@ import { ref, onMounted } from 'vue';
 import { useSaleStore } from '@/stores/saleStore'
 import api from "@/services/api.js";
 import Button from '../Form/Button.vue';
-import Swal from 'sweetalert2'
+import { useSweetAlert } from "@/composables/useSweetAlert";
 
 const tableData = ref([]);
 const isLoading = ref(true);
 const saleStore = useSaleStore()
+const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
 const setSaleToEdit = (sale) => {
     saleStore.setCurrentSale(sale)
@@ -70,9 +65,8 @@ const setSaleToEdit = (sale) => {
 
 const prepareDelete = async (saleId) => {
 
-    const result = await Swal.fire({
+    const result = await questionAlert({
         title: "Deseja excluir essa venda?",
-        showCancelButton: true,
         confirmButtonText: "Sim",
         cancelButtonText: "Não",
         confirmButtonColor: "#9b111e",
@@ -86,15 +80,25 @@ const prepareDelete = async (saleId) => {
                 throw new Error('Falha na requisição');
             }
 
-            await Swal.fire("Venda deletada!", "", "success");
+            await successAlert({
+                title: "Venda deletada!",
+            })
 
             fetchData();
         } catch (error) {
-            console.error('Erro ao deletar a venda');
-            await Swal.fire("Erro ao deletar a venda", "", "error");
+
+            await errorAlert({
+                title: "Erro ao deletar a venda",
+            })
+
         }
     } else {
-        await Swal.fire("Operação Cancelada", "", "info");
+
+        await infoAlert({
+            title: "Operação Cancelada",
+            text: "Você cancelou a operação"
+        })
+
     }
 };
 
@@ -125,33 +129,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.skeleton-container {
-    width: 100%;
-}
 
-.skeleton-row {
-    display: flex;
-    margin-bottom: 1rem;
-}
-
-.skeleton-cell {
-    height: 40px;
-    background: #e0e0e0;
-    border-radius: 4px;
-    margin-right: 1rem;
-    flex: 1;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-}
 </style>

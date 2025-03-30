@@ -53,6 +53,7 @@ const handleRegister = async () => {
 
         if (data.token) {
             localStorage.setItem('authToken', data.token)
+            localStorage.setItem('authUserName', data.name)
         }
 
         router.push('/sellers')

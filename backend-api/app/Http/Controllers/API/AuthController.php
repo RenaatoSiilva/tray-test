@@ -62,7 +62,8 @@ class AuthController extends Controller
         return response()->json(
             [
                 'success' =>  true,
-                "token"   =>  $bearerToken
+                "token"   =>  $bearerToken,
+                "name" => $user->name,
             ],
             200
         );
@@ -108,7 +109,8 @@ class AuthController extends Controller
             [
                 'success' => true,
                 "id" => $user->id,
-                "token" => $user->api_token
+                "token" => $user->api_token,
+                "name" => $user->name,
             ],
             200
         );

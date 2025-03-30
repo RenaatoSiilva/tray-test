@@ -1,5 +1,6 @@
 <template>
 
+  <div v-if="isLoading" class="skeleton h-10 w-full"></div>
 
   <div v-if="salesData.length == 0 && !isLoading">Este vendedor ainda não realizou nenhuma venda.</div>
 
@@ -8,7 +9,7 @@
       <template v-for="([date, sales]) in Object.entries(salesData)" :key="date">
         <thead>
           <tr @click="toggleCollapse(date)">
-            <th class="text-left px-4 py-2 bg-base-300" colspan="5">{{ date }}</th>
+            <th class="text-left px-4 py-2 bg-base-300" colspan="5">{{ date }} <span v-if="expandedDates[date]"> ➖ </span> <span v-if="!expandedDates[date]"> ➕ </span> </th>
           </tr>
           <tr v-if="expandedDates[date]">
             <th>Id</th>

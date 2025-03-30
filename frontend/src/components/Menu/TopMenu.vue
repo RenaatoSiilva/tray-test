@@ -51,7 +51,11 @@
           <span class="icon">🏃</span>
           <span class="text">Logout</span>
         </RouterLink>
+
+        <div>{{ authUserName }}</div>
+
       </div>
+
     </nav>
   </header>
 </template>
@@ -65,6 +69,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const isAuthenticated = localStorage.getItem('authToken')
+const authUserName = localStorage.getItem('authUserName')
 
 </script>
 
