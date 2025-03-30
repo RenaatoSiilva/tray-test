@@ -6,7 +6,7 @@ const api = {
     sales: {
 
         getAll: async () => {
-            const response = await fetch(`${API_BASE_URL}/sale/list`, {
+            const response = await fetch(`${API_BASE_URL}/sales/list`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ const api = {
         },
 
         getById: async (saleId) => {
-            const response = await fetch(`${API_BASE_URL}/sale/list/${saleId}`, {
+            const response = await fetch(`${API_BASE_URL}/sales/list/${saleId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ const api = {
         },
 
         store: async (saleData) => {
-            const response = await fetch(`${API_BASE_URL}/sale/store`, {
+            const response = await fetch(`${API_BASE_URL}/sales/store`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const api = {
         },
 
         update: async (saleId, saleData) => {
-            const response = await fetch(`${API_BASE_URL}/sale/update/${saleId}`, {
+            const response = await fetch(`${API_BASE_URL}/sales/update/${saleId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const api = {
         },
 
         delete: async (saleId) => {
-            const response = await fetch(`${API_BASE_URL}/sale/destroy/${saleId}`, {
+            const response = await fetch(`${API_BASE_URL}/sales/destroy/${saleId}`, {
                 method: "DELETE",
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const api = {
 
     sellers: {
         getAll: async () => {
-            const response = await fetch(`${API_BASE_URL}/seller/list`, {
+            const response = await fetch(`${API_BASE_URL}/sellers/list`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const api = {
         },
 
         getById: async (sellerId) => {
-            const response = await fetch(`${API_BASE_URL}/seller/list/${sellerId}`, {
+            const response = await fetch(`${API_BASE_URL}/sellers/list/${sellerId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const api = {
         },
 
         store: async (sellerData) => {
-            const response = await fetch(`${API_BASE_URL}/seller/store`, {
+            const response = await fetch(`${API_BASE_URL}/sellers/store`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ const api = {
         },
 
         update: async (sellerId, sellerData) => {
-            const response = await fetch(`${API_BASE_URL}/seller/update/${sellerId}`, {
+            const response = await fetch(`${API_BASE_URL}/sellers/update/${sellerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ const api = {
         },
 
         delete: async (sellerId) => {
-            const response = await fetch(`${API_BASE_URL}/seller/destroy/${sellerId}`, {
+            const response = await fetch(`${API_BASE_URL}/sellers/destroy/${sellerId}`, {
                 method: "DELETE",
                 headers: {
                     'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const api = {
                 date: null
             };
 
-            const response = await fetch(`${API_BASE_URL}/sale/send-commission-report`, {
+            const response = await fetch(`${API_BASE_URL}/sales/send-commission-report`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const api = {
         },
 
         getSalesBySellerIdGroupedDays: async (sellerId) => {
-            const response = await fetch(`${API_BASE_URL}/sale/listBySellerGroupedDays/${sellerId}`, {
+            const response = await fetch(`${API_BASE_URL}/sales/listBySellerGroupedDays/${sellerId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

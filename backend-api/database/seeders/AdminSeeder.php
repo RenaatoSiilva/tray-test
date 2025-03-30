@@ -14,7 +14,8 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        
+        User::firstOrCreate([
             'name'      =>  'Admin Tray',
             'email'     =>  'admin@tray.net',
             'password'  =>  bcrypt(123456789)

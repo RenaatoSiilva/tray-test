@@ -34,10 +34,11 @@ import { ref, reactive } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import api from "@/services/api.js";
+import { useSweetAlert } from "@/composables/useSweetAlert";
 
 const authStore = useAuthStore()
 const router = useRouter()
-
+const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
 const formData = reactive({
     name: null,
@@ -50,6 +51,15 @@ const handleRegister = async () => {
         const response = await api.auth.register(formData);
 
         const data = await response.json()
+
+        if (response.status == '404') {
+
+            await errorAlert({
+                title: "Erro ao efetuar o registro",
+            })
+
+            return;
+        }
 
         if (data.token) {
             localStorage.setItem('authToken', data.token)

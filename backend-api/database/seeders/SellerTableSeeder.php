@@ -18,7 +18,7 @@ class SellerTableSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
 
-            Seller::create([
+            Seller::firstOrCreate([
                 'name'  =>  $faker->name,
                 'email' =>  $faker->email
             ]);

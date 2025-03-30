@@ -29,9 +29,12 @@ import { ref, reactive } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import api from "@/services/api.js";
+import { useSweetAlert } from "@/composables/useSweetAlert";
 
 const authStore = useAuthStore()
 const router = useRouter()
+const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
+
 
 const formData = reactive({
     email: null,
@@ -43,6 +46,15 @@ const handleLogin = async () => {
         const response = await api.auth.login(formData);
 
         const data = await response.json()
+
+        if(response.status == '404'){
+
+            await errorAlert({
+                title: "Erro ao efetuar o login, usuário ou senha inválido!",
+            })
+
+            return;
+        }
 
         if (data.token) {
             localStorage.setItem('authToken', data.token)

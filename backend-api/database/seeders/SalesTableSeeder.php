@@ -24,7 +24,7 @@ class SalesTableSeeder extends Seeder
             $commission   = 8.5;
             $totalWithCommission = number_format(($amount * ($commission / 100)), 2) ;
 
-            Sale::create([
+            Sale::firstOrCreate([
                 'seller_id'             =>  $seller,
                 'amount'                =>  $amount,
                 'commission'            =>  $commission,

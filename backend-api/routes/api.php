@@ -20,19 +20,19 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(SellerController::class)->group(function () {
-        Route::get('/seller/list/{sellerId?}', 'list')->name('list.get-seller');
-        Route::post('/seller/store', 'store')->name('api.store-seller');
-        Route::put('/seller/update/{sellerId}', 'update')->name('api.update-seller');
-        Route::delete('/seller/destroy/{sellerId}', 'destroy')->name('api.delete-seller');
+        Route::get('/sellers/list/{sellerId?}', 'list');
+        Route::post('/sellers/store', 'store');
+        Route::put('/sellers/update/{sellerId}', 'update');
+        Route::delete('/sellers/destroy/{sellerId}', 'destroy')->name('api.update-seller');
     });
 
     Route::controller(SaleController::class)->group(function () {
-        Route::get('/sale/list/{saleId?}', 'list')->name('list.get-sale');
-        Route::post('/sale/store', 'store')->name('api.store-sale');
-        Route::put('/sale/update/{saleId}', 'update')->name('api.update-sale');
-        Route::delete('/sale/destroy/{saleId}', 'destroy')->name('api.delete-sale');
-        Route::get('/sale/listBySeller/{sellerId?}', 'listSalesBySellerId')->name('api.get-sales-by-seller');
-        Route::post('/sale/send-commission-report', 'sendCommissionReport')->name('api.send-commission-report');
-        Route::get('/sale/listBySellerGroupedDays/{sellerId}', 'listSalesBySellerIdWithGroupedByDays')->name('api.list-sales-by-seller-grouped-days');
+        Route::get('/sales/list/{saleId?}', 'list');
+        Route::post('/sales/store', 'store');
+        Route::put('/sales/update/{saleId}', 'update');
+        Route::delete('/sales/destroy/{saleId}', 'destroy');
+        Route::get('/sales/listBySeller/{sellerId?}', 'listSalesBySellerId');
+        Route::post('/sales/send-commission-report', 'sendCommissionReport');
+        Route::get('/sales/listBySellerGroupedDays/{sellerId}', 'listSalesBySellerIdWithGroupedByDays');
     });
 });

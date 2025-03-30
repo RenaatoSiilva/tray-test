@@ -42,10 +42,10 @@ class SellerAPITest extends TestCase
     public function prepareAPIRoutes()
     {
         $apiRoutes = [
-            'list'      =>  "/api/seller/list",
-            'store'     =>  "/api/seller/store",
-            'update'    =>  "/api/seller/update",
-            'destroy'   =>  "/api/seller/destroy"
+            'list'      =>  "/api/sellers/list",
+            'store'     =>  "/api/sellers/store",
+            'update'    =>  "/api/sellers/update",
+            'destroy'   =>  "/api/sellers/destroy"
         ];
 
         return $apiRoutes;
