@@ -72,7 +72,9 @@ const prepareDelete = async (saleId) => {
         confirmButtonColor: "#9b111e",
     });
 
+
     if (result.isConfirmed) {
+
         try {
             const response = await api.sales.delete(saleId);
 
@@ -92,7 +94,7 @@ const prepareDelete = async (saleId) => {
             })
 
         }
-    } else {
+    } else if (result.isDenied) {
 
         await infoAlert({
             title: "Operação Cancelada",

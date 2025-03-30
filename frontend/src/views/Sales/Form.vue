@@ -3,7 +3,7 @@
         <form @submit.prevent="handleSubmit" class="sales-form space-y-4">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Vendedor</legend>
-                <select id="seller" v-model="formData.seller_id" class="select mb-2" >
+                <select id="seller" v-model="formData.seller_id" class="select mb-2">
                     <option v-for="seller in sellersList" :key="seller.id" :value="seller.id">
                         {{ seller.name }}
                     </option>
@@ -12,21 +12,19 @@
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Valor</legend>
-                <input id="amount" v-model="formData.amount" class="input"  />
+                <input type="number" id="amount" v-model="formData.amount" class="input" />
                 <p>Comissão: 8.5%</p>
                 <p>Valor Total: {{ totalWithCommission }}</p>
             </fieldset>
 
-
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Data</legend>
-                <input id="date" v-model="formData.date" type="date" class="input"  />
+                <input id="date" v-model="formData.date" type="date" class="input" />
             </fieldset>
 
             <br>
 
-            <Button :label="editing ? 'Atualizar' : 'Salvar'" customClass="btn btn-primary"
-                @click="route.params.id ? updateSale() : createSale()" />
+            <Button :label="editing ? 'Atualizar' : 'Salvar'" customClass="btn btn-primary" />
 
 
         </form>
@@ -39,7 +37,7 @@ import { ref, onMounted, onBeforeMount, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
-import Swal from 'sweetalert2'
+import { useSweetAlert } from "@/composables/useSweetAlert";
 
 /** Router */
 const route = useRoute();
@@ -57,10 +55,13 @@ const formData = reactive({
     date: null,
 });
 
+
 const totalWithCommission = computed(() => {
     return (Number(formData.amount) + Number((formData.amount * (commissionPercentage / 100)).toFixed(2))).toFixed(2);
 
 });
+
+const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
 /** Load Sellers */
 const loadSellers = async () => {
@@ -107,30 +108,16 @@ const updateSale = async () => {
 
         const response = await api.sales.update(route.params.id, formData);
 
-        if (response.ok) {
-            alert('Venda Atualizada!');
-            router.push('/sales')
-        }
-
-    } catch (error) {
-        alert('Erro ao atualizar a venda!')
-    }
-}
-
-/** Create Sale */
-const createSale = async () => {
-
-    try {
-
-        const response = await api.sales.store(formData);
-
         if (response.status == '200') {
-            Swal.fire({
-                title: 'Venda Adicionada!',
-                icon: 'success',
-            });
 
-            router.push('/sales');
+            await infoAlert({
+                title: "Venda atualizada com sucesso",
+                text: "Tudo OK!"
+            })
+
+            router.push('/sales')
+
+            return;
         }
 
         if (response.status == '403') {
@@ -152,8 +139,49 @@ const createSale = async () => {
         }
 
     } catch (error) {
-        alert('Erro ao adicionar a venda!')
+        alert('Erro ao atualizar a venda!')
     }
+}
+
+/** Create Sale */
+const createSale = async () => {
+
+
+    try {
+
+        const response = await api.sales.store(formData);
+
+        if (response.status == '200') {
+
+            await successAlert({
+                title: "Venda adicionada com sucesso",
+            })
+
+            router.push('/sales');
+
+            return;
+
+        }
+
+        if (response.status == '403') {
+
+            const alertMessages = await response.json();
+
+            const errorMessages = Object.values(alertMessages.messages)
+                .flat()
+                .join(', ');
+
+            await errorAlert({
+                title: 'Dados Inválidos!',
+                text: errorMessages,
+            });
+
+            return;
+        }
+
+    } catch (error) {
+        alert('Erro ao adicionar a venda!')
+    } 
 }
 
 onBeforeMount(() => {
@@ -164,6 +192,14 @@ onBeforeMount(() => {
         fetchData();
     }
 });
+
+const handleSubmit = () => {
+    if (route.params.id) {
+        updateSale();
+    } else {
+        createSale();
+    }
+};
 
 </script>
 

@@ -1,8 +1,8 @@
 # Instruções
 
-1- Editar o arquivo .env do laravel que está localizado na pasta backend-api
+1- Navegue até o diretorio do projeto backend-api (cd backend-api)
 
-2- Executar o comando : cp .env.example .env
+2- Executar o comando : cp .env.example .env && php artisan key:generate
 
 3- Caso utilize o mailtrap como cliente de teste de e-mails modifique as seguintes variaveis no .env
 
@@ -26,5 +26,4 @@ MAIL_PASSWORD=XXXXX
 
 6- Acessa a rota de login: http://localhost:5173/login
 
-7- Você pode utilizar o administrador criado pelo seeder ou se registrar: admin@tray.net 123456789
-
+7- Você pode utilizar o administrador criado pelo seeder (admin@tray.net 123456789) ou se registrar

@@ -1,30 +1,25 @@
 <template>
-    <button :class="customClass" @click="handleClick">
-      {{ label }}
-    </button>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      label: {
-        type: String,
-        required: true
-      },
-      customClass: {
-        type: String,
-        default: ''
-      },
-      onClick: {
-        type: Function,
-        default: () => {}
-      }
+  <button :class="customClass" @click="handleClick">
+    {{ label }}
+  </button>
+</template>
+
+<script>
+export default {
+  props: {
+    label: {
+      type: String,
+      required: true
     },
-    methods: {
-      handleClick(event) {
-        this.$emit('click', event);
-      }
+    customClass: {
+      type: String,
+      default: ''
+    },
+  },
+  methods: {
+    handleClick(event) {
+      this.$emit('click', event);
     }
-  };
-  </script>
-  
+  }
+};
+</script>

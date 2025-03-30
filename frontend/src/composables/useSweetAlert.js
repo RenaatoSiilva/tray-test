@@ -30,6 +30,7 @@ export function useSweetAlert() {
             title: title || "Erro!",
             text: text || "Algo deu errado.",
             confirmButtonColor: "#d9534f",
+            confirmButtonText: 'Entendi!'
         });
     };
 

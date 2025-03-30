@@ -14,8 +14,8 @@
 
             <br>
 
-            <Button :label="editing ? 'Atualizar' : 'Salvar'" customClass="btn btn-primary"
-                @click="route.params.id ? updateSeller() : createSeller()" />
+            <Button :label="editing ? 'Atualizar' : 'Salvar'" customClass="btn btn-primary" />
+
         </form>
     </div>
 </template>
@@ -27,6 +27,7 @@ import { useRoute, useRouter } from 'vue-router';
 import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
 import Swal from 'sweetalert2'
+import { useSweetAlert } from "@/composables/useSweetAlert";
 
 /** Router */
 const route = useRoute();
@@ -41,6 +42,8 @@ const formData = reactive({
     name: null,
 });
 
+const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
+
 /** Create Sale */
 const createSeller = async () => {
 
@@ -49,15 +52,19 @@ const createSeller = async () => {
         const response = await api.sellers.store(formData);
 
         if (response.status == '200') {
-            Swal.fire({
-                title: 'Vendedor Adicionado!',
-                icon: 'success',
-            });
+
+            await successAlert({
+                title: "Vendedor Adicionado !",
+            })
 
             router.push('/sellers');
+
+            return;
+
         }
 
         if (response.status == '403') {
+
             const alertMessages = await response.json();
 
             const errorMessages = Object.values(alertMessages.messages)
@@ -83,40 +90,43 @@ const createSeller = async () => {
 /** Update Seller */
 const updateSeller = async () => {
 
-try {
+    try {
 
-    const response = await api.sellers.update(route.params.id,formData);
+        const response = await api.sellers.update(route.params.id, formData);
 
-    if (response.status == '200') {
-        Swal.fire({
-            title: 'Vendedor Atualizado!',
-            icon: 'info',
-        });
+        if (response.status == '200') {
 
-        router.push('/sellers');
+
+            await infoAlert({
+                title: "Vendedor Atualizado !",
+                text: "Tudo OK!"
+            })
+
+            router.push('/sellers');
+
+            return;
+
+        }
+
+        if (response.status == '403') {
+            const alertMessages = await response.json();
+
+            const errorMessages = Object.values(alertMessages.messages)
+                .flat()
+                .join(', ');
+
+            await errorAlert({
+                title: 'Dados Inválidos!',
+                text: errorMessages,
+            });
+
+            return;
+        }
+
+
+    } catch (error) {
+        alert('Erro ao adicionar o vendedor(a) !' + error.messages)
     }
-
-    if (response.status == '403') {
-        const alertMessages = await response.json();
-
-        const errorMessages = Object.values(alertMessages.messages)
-            .flat()
-            .join(', ');
-
-        await Swal.fire({
-            title: 'Dados Inválidos!',
-            text: errorMessages,
-            icon: 'error',
-            confirmButtonText: 'Entendi!'
-        })
-
-        return;
-    }
-
-
-} catch (error) {
-    alert('Erro ao adicionar o vendedor(a) !' + error.messages)
-}
 }
 
 /** Fetch Form Data */
@@ -132,9 +142,9 @@ const fetchData = async () => {
         const data = await response.json();
 
         formData.email = data.email;
-        formData.name  = data.name;
+        formData.name = data.name;
 
-        editing.value  = true;
+        editing.value = true;
 
     } catch (error) {
         console.error('Erro ao buscar dados:', error);
@@ -147,5 +157,13 @@ onBeforeMount(() => {
         fetchData();
     }
 });
+
+const handleSubmit = () => {
+    if (route.params.id) {
+        updateSeller();
+    } else {
+        createSeller();
+    }
+};
 
 </script>

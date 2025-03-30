@@ -122,6 +122,7 @@ const prepareDelete = async (saleId) => {
     });
 
     if (result.isConfirmed) {
+        
         try {
             const response = await api.sellers.delete(saleId);
 
@@ -141,7 +142,7 @@ const prepareDelete = async (saleId) => {
             })
 
         }
-    } else {
+    } else if (result.isDenied) {
 
         await infoAlert({
             title: "Operação Cancelada",
