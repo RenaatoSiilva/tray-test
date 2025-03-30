@@ -49,8 +49,13 @@ class SaleService implements SaleServiceInterface
         return $this->saleRepository->getSalesBySellerIdGroupedByDate($sellerId);
     }
 
-    public function getByDate(string $date){
+    public function getByDate(string $date)
+    {
         return $this->saleRepository->getByDate($date);
+    }
 
+    public function deleteBySellerId(int $sellerId)
+    {
+        return $this->saleRepository->deleteBySellerId($sellerId);
     }
 }

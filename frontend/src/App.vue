@@ -1,10 +1,11 @@
 <template>
 
-  <TopMenu :key="menuKey"/>
+  <TopMenu :key="menuKey" />
 
   <main class="content">
     <RouterView />
   </main>
+
 </template>
 
 <script setup>

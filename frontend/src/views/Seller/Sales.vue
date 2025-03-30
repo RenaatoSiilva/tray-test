@@ -70,8 +70,6 @@ const getSales = async () => {
       expandedDates.value[firstDate] = true;
     }
 
-    console.log(data)
-
   } catch (error) {
     console.error('Erro ao buscar dados:', error);
   } finally {
@@ -90,4 +88,3 @@ onBeforeMount(() => {
 });
 
 </script>
-

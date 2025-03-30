@@ -74,4 +74,9 @@ class SaleRepository extends Repository implements SaleRepositoryInterface
     {
         return $this->model->where('date', $date)->get();
     }
+
+    public function deleteBySellerId(int $sellerId)
+    {
+        return $this->model->where('seller_id', $sellerId)->delete();
+    }
 }

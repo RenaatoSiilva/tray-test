@@ -51,13 +51,11 @@ const handleRegister = async () => {
 
         const data = await response.json()
 
-        console.log(data)
-
         if (data.token) {
             localStorage.setItem('authToken', data.token)
         }
 
-        router.push('/sales')
+        router.push('/sellers')
 
     } catch (error) {
 

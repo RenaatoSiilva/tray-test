@@ -1,7 +1,7 @@
 FROM php:8.2
 
 RUN apt-get update && apt-get install -y \
-    zip unzip curl git libpng-dev libonig-dev libxml2-dev \
+    zip unzip curl git libpng-dev libonig-dev libxml2-dev sqlite3 \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

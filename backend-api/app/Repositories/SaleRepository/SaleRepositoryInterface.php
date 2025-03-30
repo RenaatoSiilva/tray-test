@@ -12,5 +12,6 @@ interface SaleRepositoryInterface{
     public function getSalesBySellerIdAndDate(int $sellerId, string $date);
     public function getSalesBySellerIdGroupedByDate(int $sellerId);
     public function getByDate(string $date);
+    public function deleteBySellerId(int $sellerId);
 
 }

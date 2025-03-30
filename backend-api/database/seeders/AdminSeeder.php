@@ -14,14 +14,10 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
-
-        for ($i = 0; $i < 10; $i++) {
-            User::create([
-                'name'      =>  $faker->name,
-                'email'     =>  $faker->email,
-                'password'  =>  bcrypt(123456789)
-            ]);
-        }
+        User::create([
+            'name'      =>  'Admin Tray',
+            'email'     =>  'admin@tray.net',
+            'password'  =>  bcrypt(123456789)
+        ]);
     }
 }
