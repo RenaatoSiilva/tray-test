@@ -11,11 +11,9 @@
 
     <div v-if="!isLoading">
 
-        <div class="btn btn-soft">
-            <router-link class="" :to="`/saleStore`">
-                ➕ Cadastrar Venda
-            </router-link>
-        </div>
+        <router-link class="btn btn-soft" :to="`/saleStore`">
+            ➕ Cadastrar Venda
+        </router-link>
 
         <div class="h-full overflow-x-auto">
             <table class="table">
@@ -44,9 +42,7 @@
                             </div>
                             &nbsp;
                             <div class="btn btn-soft btn-error cursor-pointer">
-                                <button @click="prepareDelete(row.id)">
-                                    🗑️ Deletar
-                                </button>
+                                <Button @click="prepareDelete(row.id)" :label="`🗑️ Deletar`" />
                             </div>
                         </td>
                     </tr>
@@ -61,12 +57,12 @@
 import { ref, onMounted } from 'vue';
 import { useSaleStore } from '@/stores/saleStore'
 import api from "@/services/api.js";
-
+import Button from '../Form/Button.vue';
+import Swal from 'sweetalert2'
 
 const tableData = ref([]);
 const isLoading = ref(true);
 const saleStore = useSaleStore()
-
 
 const setSaleToEdit = (sale) => {
     saleStore.setCurrentSale(sale)
@@ -74,26 +70,34 @@ const setSaleToEdit = (sale) => {
 
 const prepareDelete = async (saleId) => {
 
-    const confirmed = window.confirm("Deseja excluir essa venda ?");
+    const result = await Swal.fire({
+        title: "Deseja excluir essa venda?",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+        confirmButtonColor: "#9b111e",
+    });
 
-    if (confirmed) {
-
+    if (result.isConfirmed) {
         try {
-
             const response = await api.sales.delete(saleId);
 
             if (!response.ok) {
                 throw new Error('Falha na requisição');
             }
 
+            await Swal.fire("Venda deletada!", "", "success");
+
             fetchData();
-
         } catch (error) {
-            console.error('Erro deletar a venda');
+            console.error('Erro ao deletar a venda');
+            await Swal.fire("Erro ao deletar a venda", "", "error");
         }
+    } else {
+        await Swal.fire("Operação Cancelada", "", "info");
     }
+};
 
-}
 
 /** Load Data */
 const fetchData = async () => {

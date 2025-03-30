@@ -12,11 +12,9 @@
 
     <div v-if="!isLoading">
 
-        <div class="btn btn-soft">
-            <router-link class="" :to="`/sellerStore`">
-                ➕ Cadastrar Vendedor
-            </router-link>
-        </div>
+        <router-link class="btn btn-soft" :to="`/sellerStore`">
+            ➕ Cadastrar Vendedor
+        </router-link>
 
         <div class="h-full overflow-x-auto">
             <table class="table">
@@ -43,15 +41,11 @@
                             </div>
                             &nbsp;
                             <div class="btn btn-soft btn-error">
-                                <button @click="prepareDelete(row.id)">
-                                    🗑️ Deletar
-                                </button>
+                                <Button @click="prepareDelete(row.id)" :label="`🗑️ Deletar`" />
                             </div>
                             &nbsp;
                             <div class="btn btn-neutral">
-                                <button @click="sendCommissionReport(row.id)">
-                                    📝 Enviar Relatório
-                                </button>
+                                <Button @click="sendCommissionReport(row.id)" :label="`📝 Enviar Relatório`" />
                             </div>
                             &nbsp;
                             <div class="btn btn-soft">
@@ -74,7 +68,8 @@
 import { ref, onMounted } from 'vue';
 import { useSaleStore } from '@/stores/saleStore'
 import api from "@/services/api.js";
-
+import Button from '../Form/Button.vue';
+import Swal from 'sweetalert2'
 
 const tableData = ref([]);
 const isLoading = ref(true);
@@ -110,28 +105,35 @@ const sendCommissionReport = async (sellerId) => {
 }
 
 /** Delete */
-const prepareDelete = async (sellerId) => {
+const prepareDelete = async (saleId) => {
 
-    const confirmed = window.confirm("Deseja excluir esse vendedor ? Todas as vendas atribuidas a ele vão ser excluidas !");
+const result = await Swal.fire({
+    title: "Deseja excluir esse vendedor ? Todas as vendas relacionadas serão excluidas",
+    showCancelButton: true,
+    confirmButtonText: "Sim",
+    cancelButtonText: "Não",
+    confirmButtonColor: "#9b111e",
+});
 
-    if (confirmed) {
+if (result.isConfirmed) {
+    try {
+        const response = await api.sellers.delete(saleId);
 
-        try {
-
-            const response = await api.sellers.delete(sellerId);
-
-            if (!response.ok) {
-                throw new Error('Falha na requisição');
-            }
-
-            fetchData();
-
-        } catch (error) {
-            console.error('Erro deletar a venda');
+        if (!response.ok) {
+            throw new Error('Falha na requisição');
         }
-    }
 
+        await Swal.fire("Vendedor deletado!", "", "success");
+
+        fetchData();
+    } catch (error) {
+        console.error('Erro ao deletar o vendedor');
+        await Swal.fire("Erro ao deletar o vendedor", "", "error");
+    }
+} else {
+    await Swal.fire("Operação Cancelada", "", "info");
 }
+};
 
 /** Load Data */
 const fetchData = async () => {

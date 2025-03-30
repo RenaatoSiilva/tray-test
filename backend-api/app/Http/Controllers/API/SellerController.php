@@ -25,16 +25,27 @@ class SellerController extends Controller
         $this->sellerService = new SellerService(new SellerRepository(new Seller()));
     }
 
-    public function list(Request $request, $sellerId = null) {
+    public function list(Request $request, $sellerId = null)
+    {
 
         return $this->sellerService->get($sellerId);
-
     }
 
     public function store(Request $request)
     {
 
         $sellerValidatedData = $this->validateData($request);
+
+        if (!is_array($sellerValidatedData)) {
+
+            return response()->json(
+                [
+                    "success"  =>  false,
+                    "messages"   => $sellerValidatedData->getMessages()
+                ],
+                403
+            );
+        }
 
         $seller = $this->sellerService->create($sellerValidatedData);
 
@@ -56,8 +67,15 @@ class SellerController extends Controller
 
         $sellerValidatedData = $this->validateData($request, $sellerId);
 
-        if (!$sellerValidatedData) {
-            return response()->json(['errors' => 'Algo errado Aconteceu']);
+        if (!is_array($sellerValidatedData)) {
+
+            return response()->json(
+                [
+                    "success"  =>  false,
+                    "messages"   => $sellerValidatedData->getMessages()
+                ],
+                403
+            );
         }
 
         $this->sellerService->update($sellerId, $sellerValidatedData);
@@ -103,10 +121,15 @@ class SellerController extends Controller
             ],
         ];
 
-        $validator = Validator::make($request->all(), $rulesForValidation);
+        $customMessages = [
+            'name' => 'Você precisa inserir um nome.',
+            'email' => 'Você precisa inserir um e-mail válido.',
+        ];
+
+        $validator = Validator::make($request->all(), $rulesForValidation, $customMessages);
 
         if ($validator->fails()) {
-            return false;
+            return $validator->errors();
         }
 
         return $validator->validated();

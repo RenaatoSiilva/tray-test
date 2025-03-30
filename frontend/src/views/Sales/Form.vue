@@ -3,7 +3,7 @@
         <form @submit.prevent="handleSubmit" class="sales-form space-y-4">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Vendedor</legend>
-                <select id="seller" v-model="formData.seller_id" class="select mb-2" required>
+                <select id="seller" v-model="formData.seller_id" class="select mb-2" >
                     <option v-for="seller in sellersList" :key="seller.id" :value="seller.id">
                         {{ seller.name }}
                     </option>
@@ -12,7 +12,7 @@
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Valor</legend>
-                <input id="amount" v-model="formData.amount" class="input" required />
+                <input id="amount" v-model="formData.amount" class="input"  />
                 <p>Comissão: 8.5%</p>
                 <p>Valor Total: {{ totalWithCommission }}</p>
             </fieldset>
@@ -20,7 +20,7 @@
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Data</legend>
-                <input id="date" v-model="formData.date" type="date" class="input" required />
+                <input id="date" v-model="formData.date" type="date" class="input"  />
             </fieldset>
 
             <br>
@@ -39,6 +39,7 @@ import { ref, onMounted, onBeforeMount, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
+import Swal from 'sweetalert2'
 
 /** Router */
 const route = useRoute();
@@ -123,9 +124,31 @@ const createSale = async () => {
 
         const response = await api.sales.store(formData);
 
-        if (response.ok) {
-            alert('Venda Adicionada!');
-            router.push('/sales')
+        if (response.status == '200') {
+            Swal.fire({
+                title: 'Venda Adicionada!',
+                icon: 'success',
+            });
+
+            router.push('/sales');
+        }
+
+        if (response.status == '403') {
+
+            const alertMessages = await response.json();
+
+            const errorMessages = Object.values(alertMessages.messages)
+                .flat()
+                .join(', ');
+
+            await Swal.fire({
+                title: 'Dados Inválidos!',
+                text: errorMessages,
+                icon: 'error',
+                confirmButtonText: 'Entendi!'
+            })
+
+            return;
         }
 
     } catch (error) {

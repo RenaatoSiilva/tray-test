@@ -49,6 +49,18 @@ class SaleController extends Controller
     {
 
         $saleValidatedData = $this->validateData($request);
+
+        if (!is_array($saleValidatedData)) {
+
+            return response()->json(
+                [
+                    "success"  =>  false,
+                    "messages"   => $saleValidatedData->getMessages()
+                ],
+                403
+            );
+        }
+
         $saleValidatedData['commission'] = $this->commission;
         $saleValidatedData['commission_value'] = $this->calculateTotalAmountWithCommission($saleValidatedData['amount']);
 
@@ -153,14 +165,20 @@ class SaleController extends Controller
     {
         $rulesForValidation = [
             'seller_id'  => 'required',
-            'amount'     => 'required',
+            'amount'     => 'required|numeric|gt:0',
             'date'       => 'required'
         ];
 
-        $validator = Validator::make($request->all(), $rulesForValidation);
+        $customMessages = [
+            'seller_id' => 'Você precisa inserir um vendedor',
+            'amount' => 'Você precisa inserir uma quantidade valida e maior do que 0',
+            'date' => 'Você precisa inserir uma data valida',
+        ];
+
+        $validator = Validator::make($request->all(), $rulesForValidation, $customMessages);
 
         if ($validator->fails()) {
-            return false;
+            return $validator->errors();
         }
 
         return $validator->validated();

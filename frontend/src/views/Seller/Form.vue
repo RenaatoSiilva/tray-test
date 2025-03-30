@@ -3,12 +3,12 @@
         <form @submit.prevent="handleSubmit" class="sales-form space-y-4">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nome</legend>
-                <input id="name" v-model="formData.name" class="input" required />
+                <input id="name" v-model="formData.name" class="input" />
             </fieldset>
 
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">E-Mail</legend>
-                <input id="amount" v-model="formData.email" class="input" required />
+                <input id="amount" v-model="formData.email" class="input" />
 
             </fieldset>
 
@@ -26,6 +26,7 @@ import { ref, onMounted, onBeforeMount, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
+import Swal from 'sweetalert2'
 
 /** Router */
 const route = useRoute();
@@ -47,14 +48,75 @@ const createSeller = async () => {
 
         const response = await api.sellers.store(formData);
 
-        if (response.ok) {
-            alert('Vendedor Adicionado(a) !');
-            router.push('/sellers')
+        if (response.status == '200') {
+            Swal.fire({
+                title: 'Vendedor Adicionado!',
+                icon: 'success',
+            });
+
+            router.push('/sellers');
         }
 
+        if (response.status == '403') {
+            const alertMessages = await response.json();
+
+            const errorMessages = Object.values(alertMessages.messages)
+                .flat()
+                .join(', ');
+
+            await Swal.fire({
+                title: 'Dados Inválidos!',
+                text: errorMessages,
+                icon: 'error',
+                confirmButtonText: 'Entendi!'
+            })
+
+            return;
+        }
+
+
     } catch (error) {
-        alert('Erro ao adicionar o vendedor(a) !')
+        alert('Erro ao adicionar o vendedor(a) !' + error.messages)
     }
+}
+
+/** Update Seller */
+const updateSeller = async () => {
+
+try {
+
+    const response = await api.sellers.update(route.params.id,formData);
+
+    if (response.status == '200') {
+        Swal.fire({
+            title: 'Vendedor Atualizado!',
+            icon: 'info',
+        });
+
+        router.push('/sellers');
+    }
+
+    if (response.status == '403') {
+        const alertMessages = await response.json();
+
+        const errorMessages = Object.values(alertMessages.messages)
+            .flat()
+            .join(', ');
+
+        await Swal.fire({
+            title: 'Dados Inválidos!',
+            text: errorMessages,
+            icon: 'error',
+            confirmButtonText: 'Entendi!'
+        })
+
+        return;
+    }
+
+
+} catch (error) {
+    alert('Erro ao adicionar o vendedor(a) !' + error.messages)
+}
 }
 
 /** Fetch Form Data */
@@ -72,7 +134,7 @@ const fetchData = async () => {
         formData.email = data.email;
         formData.name  = data.name;
 
-        editing.value = true;
+        editing.value  = true;
 
     } catch (error) {
         console.error('Erro ao buscar dados:', error);

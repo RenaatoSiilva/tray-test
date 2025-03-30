@@ -22,7 +22,6 @@
     },
     methods: {
       handleClick(event) {
-        this.onClick(event);
         this.$emit('click', event);
       }
     }
