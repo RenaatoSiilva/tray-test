@@ -10,47 +10,50 @@
     </div>
 
     <div v-if="!isLoading">
-        <table class="table">
-            <thead>
-                <tr class="uppercase bold">
-                    <th>Nome do Vendedor</th>
-                    <th>Total</th>
-                    <th>Data</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(row, index) in tableData" :key="index">
-                    <td>{{ row.seller.name }}</td>
-                    <td>{{ row.amount }}</td>
-                    <td>{{ row.date }}</td>
-                    <td class="flex">
 
-                        <div class="btn btn-primary">
-                            <router-link class="" :to="{
-                                name: 'saleEdit',
-                                params: { id: row.id }
-                            }" @click="setSaleToEdit(row)">
-                                Editar
-                            </router-link>
-                        </div>
-                        &nbsp;
-                        <div class="btn btn-secondary">
-                            <button @click="prepareDelete(row.id)">
-                                Deletar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-
-        <div class="btn btn-success">
+        <div class="btn btn-soft">
             <router-link class="" :to="`/saleStore`">
-                Cadastrar Venda
+                ➕ Cadastrar Venda
             </router-link>
         </div>
+
+        <div class="h-full overflow-x-auto">
+            <table class="table">
+                <thead>
+                    <tr class="uppercase bold">
+                        <th>Nome do Vendedor</th>
+                        <th>Total</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(row, index) in tableData" :key="index">
+                        <td>{{ row.seller.name }}</td>
+                        <td>{{ row.amount }}</td>
+                        <td>{{ row.date }}</td>
+                        <td class="flex">
+
+                            <div class="btn btn-warning">
+                                <router-link class="cursor-pointer" :to="{
+                                    name: 'saleEdit',
+                                    params: { id: row.id }
+                                }" @click="setSaleToEdit(row)">
+                                    🖊️ Editar
+                                </router-link>
+                            </div>
+                            &nbsp;
+                            <div class="btn btn-soft btn-error cursor-pointer">
+                                <button @click="prepareDelete(row.id)">
+                                    🗑️ Deletar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </template>
 

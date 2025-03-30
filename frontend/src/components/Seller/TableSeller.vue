@@ -11,57 +11,62 @@
 
 
     <div v-if="!isLoading">
-        <table class="table">
-            <thead>
-                <tr class="uppercase bold">
-                    <th>Nome</th>
-                    <th>E-Mail</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(row, index) in tableData" :key="index">
-                    <td>{{ row.name }}</td>
-                    <td>{{ row.email }}</td>
-                    <td class="flex">
 
-                        <div class="btn btn-primary">
-                            <router-link class="" :to="{
-                                name: 'sellerEdit',
-                                params: { id: row.id }
-                            }" @click="setSellerToEdit(row)">
-                                Editar
-                            </router-link>
-                        </div>
-                        &nbsp;
-                        <div class="btn btn-secondary">
-                            <button @click="prepareDelete(row.id)">
-                                Deletar
-                            </button>
-                        </div>
-                        &nbsp;
-                        <div class="btn btn-neutral">
-                            <button @click="sendCommissionReport(row.id)">
-                                Enviar Relatório
-                            </button>
-                        </div>
-                        &nbsp;
-                        <div class="btn btn-info">
-                            <router-link :to="`/sellerSales/${row.id}`">
-                                Visualizar Vendas
-                            </router-link>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-
-        <div class="btn btn-success">
+        <div class="btn btn-soft">
             <router-link class="" :to="`/sellerStore`">
-                Cadastrar Vendedor
+                ➕ Cadastrar Vendedor
             </router-link>
         </div>
+
+        <div class="h-full overflow-x-auto">
+            <table class="table">
+                <thead class="">
+                    <tr class="uppercase bold">
+                        <th>Nome</th>
+                        <th>E-Mail</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(row, index) in tableData" :key="index">
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.email }}</td>
+                        <td class="flex">
+
+                            <div class="btn btn-warning">
+                                <router-link class="" :to="{
+                                    name: 'sellerEdit',
+                                    params: { id: row.id }
+                                }" @click="setSellerToEdit(row)">
+                                    🖊️ Editar
+                                </router-link>
+                            </div>
+                            &nbsp;
+                            <div class="btn btn-soft btn-error">
+                                <button @click="prepareDelete(row.id)">
+                                    🗑️ Deletar
+                                </button>
+                            </div>
+                            &nbsp;
+                            <div class="btn btn-neutral">
+                                <button @click="sendCommissionReport(row.id)">
+                                    📝 Enviar Relatório
+                                </button>
+                            </div>
+                            &nbsp;
+                            <div class="btn btn-soft">
+                                <router-link :to="`/sellerSales/${row.id}`">
+                                    🛒 Visualizar Vendas
+                                </router-link>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
     </div>
 </template>
 
@@ -69,6 +74,7 @@
 import { ref, onMounted } from 'vue';
 import { useSaleStore } from '@/stores/saleStore'
 import api from "@/services/api.js";
+
 
 const tableData = ref([]);
 const isLoading = ref(true);
