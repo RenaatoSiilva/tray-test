@@ -15,6 +15,8 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         
+        User::truncate();
+
         User::firstOrCreate([
             'name'      =>  'Admin Tray',
             'email'     =>  'admin@tray.net',

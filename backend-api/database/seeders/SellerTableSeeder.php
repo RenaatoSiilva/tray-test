@@ -14,6 +14,9 @@ class SellerTableSeeder extends Seeder
      */
     public function run(): void
     {
+
+        Seller::truncate();
+
         $faker = Faker::create();
 
         for ($i = 0; $i < 10; $i++) {

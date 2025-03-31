@@ -33,6 +33,8 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.setToken(null)
       this.user = null
+      localStorage.removeItem('salesCache')
+      localStorage.removeItem('sellersCache')
       router.push('/login')
     }
   },
