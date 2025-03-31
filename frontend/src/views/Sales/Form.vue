@@ -44,6 +44,7 @@ import Button from "@/components/Form/Button.vue"
 import { useSweetAlert } from "@/composables/useSweetAlert";
 import { useSaleStore } from '@/stores/saleStore';
 import { useSaleListCache } from '@/stores/saleListCache';
+import { useSellerListCache } from '@/stores/sellerListCache';
 
 /** Router */
 const route = useRoute();
@@ -57,6 +58,7 @@ const commissionPercentage = 8.5;
 const sellersList = ref([]);
 const saleStore = useSaleStore();
 const salesCache = useSaleListCache();
+const sellerCache = useSellerListCache();
 
 
 const formData = reactive({
@@ -75,21 +77,31 @@ const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
 /** Load Sellers */
 const loadSellers = async () => {
-    try {
 
-        sellersDataLoaded.value = false;
+    if (!sellerCache.checkSellersCache()) {
 
-        const response = await api.sellers.getAll();
+        try {
 
-        const data = await response.json();
+            sellersDataLoaded.value = false;
 
-        sellersList.value = data;
+            const response = await api.sellers.getAll();
+
+            const data = await response.json();
+
+            sellersList.value = data;
+
+            sellersDataLoaded.value = true;
+
+        } catch (error) {
+
+            alert('Erro ao carregar os vendedores.')
+        }
+
+    } else {
+
+        sellersList.value = sellerCache.checkSellersCache();
 
         sellersDataLoaded.value = true;
-
-    } catch (error) {
-
-        alert('Erro ao carregar os vendedores.')
     }
 }
 
