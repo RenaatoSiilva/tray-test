@@ -137,6 +137,8 @@ const prepareDelete = async (saleId) => {
                 title: "Vendedor Deletado !",
             })
 
+            sellerCache.removeCache();
+
             fetchData();
         } catch (error) {
 

@@ -89,6 +89,8 @@ const prepareDelete = async (saleId) => {
                 title: "Venda deletada!",
             })
 
+            salesCache.removeCache();
+
             fetchData();
         } catch (error) {
 

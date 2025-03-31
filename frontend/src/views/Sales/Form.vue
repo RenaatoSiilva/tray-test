@@ -43,6 +43,7 @@ import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
 import { useSweetAlert } from "@/composables/useSweetAlert";
 import { useSaleStore } from '@/stores/saleStore';
+import { useSaleListCache } from '@/stores/saleListCache';
 
 /** Router */
 const route = useRoute();
@@ -55,6 +56,8 @@ const sellersDataLoaded = ref(false);
 const commissionPercentage = 8.5;
 const sellersList = ref([]);
 const saleStore = useSaleStore();
+const salesCache = useSaleListCache();
+
 
 const formData = reactive({
     seller_id: null,
@@ -132,6 +135,8 @@ const updateSale = async () => {
                 text: "Tudo OK!"
             })
 
+            salesCache.removeCache();
+
             router.push('/sales')
 
             return;
@@ -173,6 +178,8 @@ const createSale = async () => {
             await successAlert({
                 title: "Venda adicionada com sucesso",
             })
+
+            salesCache.removeCache();
 
             router.push('/sales');
 

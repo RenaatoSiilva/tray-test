@@ -32,10 +32,14 @@ import Button from "@/components/Form/Button.vue"
 import Swal from 'sweetalert2'
 import { useSweetAlert } from "@/composables/useSweetAlert";
 import { useSellerStore } from '@/stores/sellerStore';
+import { useSellerListCache } from '@/stores/sellerListCache';
+
 /** Router */
 const route = useRoute();
 const router = useRouter();
 const sellerStore = useSellerStore();
+const sellerCache = useSellerListCache();
+
 
 /** Form Updating Or Creating */
 const editing = ref(false);
@@ -76,6 +80,8 @@ const createSeller = async () => {
             await successAlert({
                 title: "Vendedor Adicionado !",
             })
+
+            sellerCache.removeCache();
 
             router.push('/sellers');
 
@@ -121,6 +127,8 @@ const updateSeller = async () => {
                 title: "Vendedor Atualizado !",
                 text: "Tudo OK!"
             })
+
+            sellerCache.removeCache();
 
             router.push('/sellers');
 
