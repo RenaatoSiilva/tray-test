@@ -1,23 +1,28 @@
 import { defineStore } from 'pinia'
 
-export const useSellerListCache = defineStore('cache', {
+export const useSellerListCache = defineStore('cacheSeller', {
   state: () => ({
-    cache: localStorage.getItem('sellersCache') || [],
+    cache: JSON.parse(localStorage.getItem('sellersCache')) || [],
   }),
   actions: {
     setSellerListCache(data) {
-      this.cache = JSON.stringify(data)
-      localStorage.setItem('sellersCache', this.cache)
+      this.cache = data; 
+      localStorage.setItem('sellersCache', JSON.stringify(data)); 
     },
 
     checkSellersCache() {
+      const storedData = localStorage.getItem('sellersCache');
 
-      const storedData = localStorage.getItem('sellersCache') || []
-
-      if (storedData) {
-        this.cache = storedData
-        return JSON.parse(this.cache)
+      if (!storedData) {
+        return false;
       }
+
+      this.cache = JSON.parse(storedData);
+      return this.cache;
     },
+
+    removeCache() {
+      localStorage.removeItem('sellersCache')
   }
-})
+  }
+});

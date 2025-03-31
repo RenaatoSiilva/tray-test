@@ -53,10 +53,13 @@ import { useSaleStore } from '@/stores/saleStore'
 import api from "@/services/api.js";
 import Button from '../Form/Button.vue';
 import { useSweetAlert } from "@/composables/useSweetAlert";
+import { useSaleListCache } from '@/stores/saleListCache';
 
 const tableData = ref([]);
 const isLoading = ref(true);
 const saleStore = useSaleStore()
+const salesCache = useSaleListCache();
+
 const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
 const setSaleToEdit = (sale) => {
@@ -107,21 +110,41 @@ const prepareDelete = async (saleId) => {
 
 /** Load Data */
 const fetchData = async () => {
-    try {
 
-        const response = await api.sales.getAll();
 
-        if (!response.ok) {
-            throw new Error('Falha na requisição');
+
+    if (!salesCache.checkSalesCache()) {
+
+        try {
+
+            console.log(salesCache.checkSalesCache() == [])
+
+            const response = await api.sales.getAll();
+
+            if (!response.ok) {
+                throw new Error('Falha na requisição');
+            }
+
+            const data = await response.json();
+
+            tableData.value = data;
+
+            console.log(data)
+
+            salesCache.setSalesListCache(data);
+
+        } catch (error) {
+            console.error('Erro ao buscar dados:', error);
+        } finally {
+            isLoading.value = false;
         }
 
-        const data = await response.json();
-        tableData.value = data;
+    } else {
 
-    } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-    } finally {
+        tableData.value = salesCache.checkSalesCache();
+
         isLoading.value = false;
+
     }
 };
 
@@ -130,6 +153,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

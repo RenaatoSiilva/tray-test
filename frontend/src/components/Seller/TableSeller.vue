@@ -157,7 +157,7 @@ const prepareDelete = async (saleId) => {
 /** Load Data */
 const fetchData = async () => {
 
-    if (sellerCache.checkSellersCache() == []) {
+    if (!sellerCache.checkSellersCache()) {
 
         try {
 
@@ -171,10 +171,7 @@ const fetchData = async () => {
 
             tableData.value = data;
 
-            console.log(data)
-
             sellerCache.setSellerListCache(data);
-
 
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
