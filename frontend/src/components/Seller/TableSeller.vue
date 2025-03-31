@@ -66,7 +66,8 @@ import { useSweetAlert } from "@/composables/useSweetAlert";
 
 const tableData = ref([]);
 const isLoading = ref(true);
-const sellerStore = useSellerStore()
+const sellerStore = useSellerStore();
+
 const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
 const setSellerToEdit = (seller) => {
