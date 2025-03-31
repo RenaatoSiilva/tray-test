@@ -14,7 +14,8 @@
                 <thead>
                     <tr class="uppercase bold">
                         <th>Nome do Vendedor</th>
-                        <th>Total</th>
+                        <th>Valor</th>
+                        <th>Valor Total C/ Comissão</th>
                         <th>Data</th>
                         <th>Ações</th>
                     </tr>
@@ -23,6 +24,7 @@
                     <tr v-for="(row, index) in tableData" :key="index">
                         <td>{{ row.seller.name }}</td>
                         <td>{{ row.amount }}</td>
+                        <td>{{ row.amount + row.commission_value }}</td>
                         <td>{{ row.date }}</td>
                         <td class="flex">
 
@@ -78,6 +80,8 @@ const prepareDelete = async (saleId) => {
 
     if (result.isConfirmed) {
 
+        isLoading.value = true;
+
         try {
             const response = await api.sales.delete(saleId);
 
@@ -98,7 +102,10 @@ const prepareDelete = async (saleId) => {
                 title: "Erro ao deletar a venda",
             })
 
+        } finally {
+            isLoading.value = false;
         }
+
     } else if (result.isDenied) {
 
         await infoAlert({
@@ -119,8 +126,6 @@ const fetchData = async () => {
 
         try {
 
-            console.log(salesCache.checkSalesCache() == [])
-
             const response = await api.sales.getAll();
 
             if (!response.ok) {
@@ -130,8 +135,6 @@ const fetchData = async () => {
             const data = await response.json();
 
             tableData.value = data;
-
-            console.log(data)
 
             salesCache.setSalesListCache(data);
 

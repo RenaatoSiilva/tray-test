@@ -126,6 +126,8 @@ const prepareDelete = async (saleId) => {
 
     if (result.isConfirmed) {
 
+        isLoading.value = true;
+
         try {
             const response = await api.sellers.delete(saleId);
 
@@ -140,13 +142,17 @@ const prepareDelete = async (saleId) => {
             sellerCache.removeCache();
 
             fetchData();
+            
         } catch (error) {
 
             await errorAlert({
                 title: "Erro ao deletar o(a) vendedor(a)",
             })
 
+        } finally {
+            isLoading.value = false;
         }
+
     } else if (result.isDenied) {
 
         await infoAlert({
