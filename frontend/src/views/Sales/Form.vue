@@ -38,6 +38,7 @@ import { useRoute, useRouter } from 'vue-router';
 import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
 import { useSweetAlert } from "@/composables/useSweetAlert";
+import { useSaleStore } from '@/stores/saleStore';
 
 /** Router */
 const route = useRoute();
@@ -48,6 +49,8 @@ const editing = ref(false);
 const sellers = ref([]);
 const commissionPercentage = 8.5;
 const sellersList = ref([]);
+const saleStore = useSaleStore();
+
 
 const formData = reactive({
     seller_id: null,
@@ -181,7 +184,7 @@ const createSale = async () => {
 
     } catch (error) {
         alert('Erro ao adicionar a venda!')
-    } 
+    }
 }
 
 onBeforeMount(() => {
@@ -189,9 +192,18 @@ onBeforeMount(() => {
     loadSellers();
 
     if (route.params.id) {
-        fetchData();
+        if (saleStore.currentSale) {
+            formData.seller_id = saleStore.currentSale.seller_id;
+            formData.amount = saleStore.currentSale.amount;
+            formData.date = saleStore.currentSale.date;
+            return;
+        } else {
+            fetchData();
+        }
     }
 });
+
+
 
 const handleSubmit = () => {
     if (route.params.id) {

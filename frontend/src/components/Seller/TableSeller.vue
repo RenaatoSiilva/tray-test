@@ -27,7 +27,7 @@
                             <div class="btn btn-warning">
                                 <router-link class="" :to="{
                                     name: 'sellerEdit',
-                                    params: { id: row.id }
+                                    params: { id: row.id },
                                 }" @click="setSellerToEdit(row)">
                                     🖊️ Editar
                                 </router-link>
@@ -59,19 +59,18 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useSaleStore } from '@/stores/saleStore'
+import { useSellerStore } from '@/stores/sellerStore';
 import api from "@/services/api.js";
 import Button from '../Form/Button.vue';
 import { useSweetAlert } from "@/composables/useSweetAlert";
 
-
 const tableData = ref([]);
 const isLoading = ref(true);
-const saleStore = useSaleStore()
+const sellerStore = useSellerStore()
 const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
-const setSellerToEdit = (sale) => {
-    saleStore.setCurrentSale(sale)
+const setSellerToEdit = (seller) => {
+    sellerStore.setCurrentSeller(seller)
 }
 
 /** Send Commission Report */
@@ -174,6 +173,7 @@ const fetchData = async () => {
 onMounted(() => {
     fetchData();
 });
+
 </script>
 
 <style scoped>

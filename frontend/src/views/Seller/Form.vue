@@ -22,16 +22,17 @@
 
 <script setup>
 
-import { ref, onMounted, onBeforeMount, computed, reactive } from 'vue';
+import { ref, onMounted, onBeforeMount, computed, reactive, watchEffect, watch, onUpdated, onActivated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from "@/services/api.js";
 import Button from "@/components/Form/Button.vue"
 import Swal from 'sweetalert2'
 import { useSweetAlert } from "@/composables/useSweetAlert";
-
+import { useSellerStore } from '@/stores/sellerStore';
 /** Router */
 const route = useRoute();
 const router = useRouter();
+const sellerStore = useSellerStore();
 
 /** Form Updating Or Creating */
 const editing = ref(false);
@@ -41,6 +42,21 @@ const formData = reactive({
     email: null,
     name: null,
 });
+
+
+onBeforeMount(() => {
+
+    if (route.params.id) {
+        if (sellerStore.currentSeller) {
+            formData.email = sellerStore.currentSeller.email;
+            formData.name = sellerStore.currentSeller.name;
+            return;
+        } else {
+            fetchData();
+        }
+    }
+});
+
 
 const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 
@@ -150,13 +166,6 @@ const fetchData = async () => {
         console.error('Erro ao buscar dados:', error);
     }
 };
-
-onBeforeMount(() => {
-
-    if (route.params.id) {
-        fetchData();
-    }
-});
 
 const handleSubmit = () => {
     if (route.params.id) {
