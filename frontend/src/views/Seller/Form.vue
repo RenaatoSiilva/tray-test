@@ -1,5 +1,8 @@
 <template>
-    <div class="form-container">
+
+    <div v-if="!dataLoaded" class="skeleton h-10 w-full"></div>
+
+    <div class="form-container" v-if="dataLoaded">
         <form @submit.prevent="handleSubmit" class="sales-form space-y-4">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Nome</legend>
@@ -36,6 +39,7 @@ const sellerStore = useSellerStore();
 
 /** Form Updating Or Creating */
 const editing = ref(false);
+const dataLoaded = ref(true);
 
 /** Form Data */
 const formData = reactive({
@@ -149,6 +153,8 @@ const updateSeller = async () => {
 const fetchData = async () => {
     try {
 
+        dataLoaded.value = false;
+
         const response = await api.sellers.getById(route.params.id)
 
         if (!response.ok) {
@@ -160,8 +166,7 @@ const fetchData = async () => {
         formData.email = data.email;
         formData.name = data.name;
 
-        editing.value = true;
-
+        dataLoaded.value = true;
     } catch (error) {
         console.error('Erro ao buscar dados:', error);
     }

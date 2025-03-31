@@ -1,9 +1,13 @@
 <template>
-    <div class="form-container">
+
+    <div v-if="!dataLoaded" class="skeleton h-10 w-full"></div>
+
+    <div class="form-container" v-if="dataLoaded">
         <form @submit.prevent="handleSubmit" class="sales-form space-y-4">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">Vendedor</legend>
-                <select id="seller" v-model="formData.seller_id" class="select mb-2">
+                <div v-if="!sellersDataLoaded" class="skeleton h-10 w-64"></div>
+                <select id="seller" v-model="formData.seller_id" class="select mb-2" v-if="sellersDataLoaded">
                     <option v-for="seller in sellersList" :key="seller.id" :value="seller.id">
                         {{ seller.name }}
                     </option>
@@ -46,11 +50,11 @@ const router = useRouter();
 
 /** Form Data */
 const editing = ref(false);
-const sellers = ref([]);
+const dataLoaded = ref(true);
+const sellersDataLoaded = ref(false);
 const commissionPercentage = 8.5;
 const sellersList = ref([]);
 const saleStore = useSaleStore();
-
 
 const formData = reactive({
     seller_id: null,
@@ -69,11 +73,16 @@ const { questionAlert, successAlert, errorAlert, infoAlert } = useSweetAlert();
 /** Load Sellers */
 const loadSellers = async () => {
     try {
+
+        sellersDataLoaded.value = false;
+
         const response = await api.sellers.getAll();
 
         const data = await response.json();
 
         sellersList.value = data;
+
+        sellersDataLoaded.value = true;
 
     } catch (error) {
 
@@ -84,6 +93,8 @@ const loadSellers = async () => {
 /** Fetch Form Data */
 const fetchData = async () => {
     try {
+
+        dataLoaded.value = false;
 
         const response = await api.sales.getById(route.params.id)
 
@@ -98,6 +109,9 @@ const fetchData = async () => {
         formData.date = data.date;
 
         editing.value = true;
+
+        dataLoaded.value = true;
+
 
     } catch (error) {
         console.error('Erro ao buscar dados:', error);
@@ -192,6 +206,9 @@ onBeforeMount(() => {
     loadSellers();
 
     if (route.params.id) {
+
+        editing.value = true;
+
         if (saleStore.currentSale) {
             formData.seller_id = saleStore.currentSale.seller_id;
             formData.amount = saleStore.currentSale.amount;
